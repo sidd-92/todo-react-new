@@ -1,0 +1,22 @@
+.container{
+  margin-top: 40px;
+}
+
+.positionToast{
+  position: relative;
+  bottom: -300px;
+  left:-590px;
+}
+
+.card-action button{
+  margin: 10px;
+}
+
+.completedText{
+  text-decoration: line-through;
+}
+
+.positionEveryday{
+  position: relative;
+  top:7px;
+}
