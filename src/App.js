@@ -14,10 +14,32 @@ class App extends React.Component {
       edittempText: "",
       saved: false,
       deleteTask: false,
+      allDates : [],
       taskToDelete : {task:"", index:-1},
-      doneEveryday: false
+      doneEveryday: false,
     };
   }
+  componentDidMount() {
+    this.getAllTasks();
+    this.getTasksById(1);
+  }
+
+  getAllTasks = () => {
+    fetch('http://5bd27037c8f9e400130cb7d9.mockapi.io/words')
+    .then(res => res.json())
+    .then((data) => {
+      this.setState({listOfTasksByDay: data})
+    })
+    .catch(console.log)
+  }
+  getTasksById = (id) => {
+    fetch(`http://5bd27037c8f9e400130cb7d9.mockapi.io/words/${id}`)
+    .then(res => res.json())
+    .then((data) => {
+      console.log("GEBY ID",data);
+    })
+    .catch(console.log)
+  } 
   handleText(e) {
     e.preventDefault();
     this.setState({ tempText: e.target.value });
@@ -85,7 +107,7 @@ class App extends React.Component {
 
   deleteCard(e,tasks,i) {
     let listOfTasksByDay = this.state.listOfTasksByDay;
-    let removedElem = listOfTasksByDay.splice(i,1);
+    //let removedElem = listOfTasksByDay.splice(i,1);
     this.setState({listOfTasksByDay, deleteTask: false});
     console.log(tasks,i);
   }
@@ -137,7 +159,7 @@ class App extends React.Component {
         {this.state.listOfTasksByDay.length > 0 ? (
           <div className="row">
             {this.state.listOfTasksByDay.map((tasks, i) => (
-              <div key={i} className="col l3 m6 s12">
+              <div key={i} className="col l3 m6 s12" onClick={() => this.getTasksById(i+1)}>
                 <div
                   className={`card ${
                     tasks.completed ? "grey" : "blue"
@@ -154,7 +176,7 @@ class App extends React.Component {
                         onChange={e => this.handleEditText(e)}
                       />
                     ) : (
-                      <span className="card-title">{tasks.task}</span>
+                      <span className="card-title">{tasks.tasks}</span>
                     )}
                     <p>
                       <label>
@@ -170,8 +192,8 @@ class App extends React.Component {
                           }
                         >
                           {this.state.by === "Everyday"
-                            ? tasks.by
-                            : `Complete By ${tasks.by}`}
+                            ? moment(tasks.by).format("ddd, MMM Do YY")
+                            : `Complete By ${moment(tasks.by).format("ddd, MMM Do YY")}`}
                         </span>
                       </label>
                     </p>
