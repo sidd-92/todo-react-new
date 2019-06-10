@@ -80,7 +80,9 @@ class App extends React.Component {
   }
   saveTask(e, tasks, i) {
     let listOfTasksByDay = this.state.listOfTasksByDay;
-    listOfTasksByDay[i].task = this.state.edittempText;
+    if (this.state.edittempText !== '') {
+      listOfTasksByDay[i].task = this.state.edittempText;
+    }
     this.setState({ listOfTasksByDay, saved: true });
     console.log(tasks, i, this.state.edittempText);
   }
@@ -164,7 +166,11 @@ class App extends React.Component {
                         id="todo_task"
                         type="text"
                         className="validate"
-                        value={this.state.edittempText}
+                        value={
+                          this.state.edittempText === ''
+                            ? this.state.tempText
+                            : this.state.edittempText
+                        }
                         onChange={e => this.handleEditText(e)}
                       />
                     ) : (
@@ -202,18 +208,11 @@ class App extends React.Component {
                       </button>
                     )}
                     {this.state.editTask.index === i && !this.state.saved ? (
-                      <React.Fragment>
-                        <button
-                          className=" green-text btn-flat"
-                          onClick={e => this.saveTask(e, tasks, i)}>
-                          Save
-                        </button>
-                        <button
-                          className=" red-text btn-flat"
-                          onClick={e => this.cancelEditTask(e, tasks, i)}>
-                          Cancel
-                        </button>
-                      </React.Fragment>
+                      <button
+                        className=" green-text btn-flat"
+                        onClick={e => this.saveTask(e, tasks, i)}>
+                        Save
+                      </button>
                     ) : this.state.deleteTask &&
                       this.state.taskToDelete.index === i ? (
                       <div>
