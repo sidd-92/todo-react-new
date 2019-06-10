@@ -2,7 +2,32 @@
 import React from 'react';
 import './App.css';
 import M from 'materialize-css';
+import Table from 'rc-table';
 import moment from 'moment';
+const columns = [
+  {
+    title: 'Task',
+    dataIndex: 'task',
+    key: 'task'
+  },
+  {
+    title: 'Done By / Everyday',
+    dataIndex: 'by',
+    key: 'by'
+  },
+  {
+    title: 'Edit',
+    dataIndex: '',
+    key: 'edit',
+    render: () => <a href="#">Edit</a>
+  },
+  {
+    title: 'Delete',
+    dataIndex: '',
+    key: 'delete',
+    render: () => <a href="#">Delete</a>
+  }
+];
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -16,8 +41,19 @@ class App extends React.Component {
       saved: false,
       deleteTask: false,
       taskToDelete: { task: '', index: -1 },
-      doneEveryday: false
+      doneEveryday: false,
+      enableTableView: false
     };
+    this.handleText = this.handleText.bind(this);
+    this.handleDay = this.handleDay.bind(this);
+    this.addToList = this.addToList.bind(this);
+    this.handleEditCard = this.handleEditCard.bind(this);
+    this.completeTask = this.completeTask.bind(this);
+    this.saveTask = this.saveTask.bind(this);
+    this.handleEditText = this.handleEditText.bind(this);
+    this.deleteCard = this.deleteCard.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.enableTableViewHandler = this.enableTableViewHandler.bind(this);
   }
   handleText(e) {
     e.preventDefault();
@@ -103,8 +139,10 @@ class App extends React.Component {
     this.setState({ listOfTasksByDay, deleteTask: false });
     console.log(tasks, i);
   }
+  enableTableViewHandler() {
+    this.setState({ enableTableView: !this.state.enableTableView });
+  }
   render() {
-    console.log(this.state.by === '');
     return (
       <React.Fragment>
         <div className="row center-align card-panel">
@@ -152,7 +190,23 @@ class App extends React.Component {
             </button>
           </div>
         </div>
-        {this.state.listOfTasksByDay.length > 0 ? (
+        <div className="card-panel valign-wrapper">
+          <div className="switch">
+            <label>
+              Enable Table View
+              <input
+                type="checkbox"
+                disabled={this.state.listOfTasksByDay.length === 0}
+                checked={this.state.enableTableView}
+                onClick={this.enableTableViewHandler}
+              />
+              <span className="lever" />
+            </label>
+          </div>
+        </div>
+        {this.state.enableTableView ? (
+          <Table columns={columns} data={this.state.listOfTasksByDay} />
+        ) : this.state.listOfTasksByDay.length > 0 ? (
           <div className="row">
             {this.state.listOfTasksByDay.map((tasks, i) => (
               <div key={i} className="col l3 m6 s12">
