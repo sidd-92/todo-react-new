@@ -32,12 +32,15 @@ class App extends React.Component {
     let listOfTasksByDay = this.state.listOfTasksByDay;
     let date;
     let by = this.state.by;
-    if (by === 'Everyday') {
+    if (this.state.doneEveryday) {
       date = 'Everyday';
     } else {
       date = moment(this.state.by).format('ddd, MMM Do YYYY');
     }
-    if (this.state.tempText === '') {
+    if (
+      this.state.tempText === '' ||
+      (this.state.by === '' && !this.state.doneEveryday)
+    ) {
       M.toast({
         html: 'Field Cannot Be Empty',
         inDuration: '100',
@@ -47,13 +50,16 @@ class App extends React.Component {
       });
     } else {
       listOfTasksByDay.push({ task: this.state.tempText, by: date });
-      this.setState({
-        listOfTasksByDay,
-        tempText: '',
-        by: '',
-        deleteTask: false,
-        doneEveryday: false
-      });
+      this.setState(
+        {
+          listOfTasksByDay,
+          tempText: '',
+          by: '',
+          deleteTask: false,
+          doneEveryday: false
+        },
+        () => console.log('All Fields Updated')
+      );
     }
   }
   handleEditCard(e, tasks, i) {
@@ -96,10 +102,11 @@ class App extends React.Component {
     console.log(tasks, i);
   }
   render() {
+    console.log(this.state.by === '');
     return (
       <React.Fragment>
-        <div className="row">
-          <div className="input-field col s4 m4 l4">
+        <div className="row center-align card-panel">
+          <div className="input-field col s4 m4 l3">
             <input
               id="todo_task"
               type="text"
@@ -112,19 +119,23 @@ class App extends React.Component {
             <input
               id="by_day"
               type="date"
+              value={this.state.by}
               placeholder="Enter a Date"
               disabled={this.state.doneEveryday}
               onChange={e => this.handleDay(e)}
             />
             <label htmlFor="by_day">By "7 May 19"</label>
           </div>
-          <div className="col s2 m2 l2 positionEveryday">
+          <div className="col s2 m2 l3 positionEveryday">
             <p>
               <label>
                 <input
                   type="checkbox"
+                  checked={this.state.doneEveryday}
                   onClick={() =>
-                    this.setState({ doneEveryday: true, by: 'Everyday' })
+                    this.setState({
+                      doneEveryday: !this.state.doneEveryday
+                    })
                   }
                 />
                 <span>To Be Done Everyday ?</span>
@@ -133,9 +144,9 @@ class App extends React.Component {
           </div>
           <div className="input-field col s2 m2 l2">
             <button
-              className="btn-floating btn-large red"
+              className="btn btn-large red"
               onClick={e => this.addToList(e)}>
-              <i className="medium material-icons">add</i>
+              Add Task / Todo
             </button>
           </div>
         </div>
@@ -171,9 +182,7 @@ class App extends React.Component {
                           className={
                             tasks.completed ? 'completedText' : 'amber-text'
                           }>
-                          {this.state.by === 'Everyday'
-                            ? tasks.by
-                            : `Complete By ${tasks.by}`}
+                          {tasks.by}
                         </span>
                       </label>
                     </p>
@@ -193,11 +202,18 @@ class App extends React.Component {
                       </button>
                     )}
                     {this.state.editTask.index === i && !this.state.saved ? (
-                      <button
-                        className=" green-text btn-flat"
-                        onClick={e => this.saveTask(e, tasks, i)}>
-                        Save
-                      </button>
+                      <React.Fragment>
+                        <button
+                          className=" green-text btn-flat"
+                          onClick={e => this.saveTask(e, tasks, i)}>
+                          Save
+                        </button>
+                        <button
+                          className=" red-text btn-flat"
+                          onClick={e => this.cancelEditTask(e, tasks, i)}>
+                          Cancel
+                        </button>
+                      </React.Fragment>
                     ) : this.state.deleteTask &&
                       this.state.taskToDelete.index === i ? (
                       <div>
