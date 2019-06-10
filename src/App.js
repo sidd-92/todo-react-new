@@ -4,34 +4,34 @@ import './App.css';
 import M from 'materialize-css';
 import Table from 'rc-table';
 import moment from 'moment';
-const columns = [
-  {
-    title: 'Task',
-    dataIndex: 'task',
-    key: 'task'
-  },
-  {
-    title: 'Done By / Everyday',
-    dataIndex: 'by',
-    key: 'by'
-  },
-  {
-    title: 'Edit',
-    dataIndex: '',
-    key: 'edit',
-    render: () => <a href="#">Edit</a>
-  },
-  {
-    title: 'Delete',
-    dataIndex: '',
-    key: 'delete',
-    render: () => <a href="#">Delete</a>
-  }
-];
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      columns: [
+        {
+          title: 'Task',
+          dataIndex: 'task',
+          key: 'task'
+        },
+        {
+          title: 'Done By / Everyday',
+          dataIndex: 'by',
+          key: 'by'
+        },
+        {
+          title: 'Edit',
+          dataIndex: '',
+          key: 'edit',
+          render: () => <button className="btn">Edit</button>
+        },
+        {
+          title: 'Delete',
+          dataIndex: '',
+          key: 'delete',
+          render: () => <button className="btn">Delete</button>
+        }
+      ],
       listOfTasksByDay: [],
       tempText: '',
       completed: false,
@@ -205,7 +205,10 @@ class App extends React.Component {
           </div>
         </div>
         {this.state.enableTableView ? (
-          <Table columns={columns} data={this.state.listOfTasksByDay} />
+          <Table
+            columns={this.state.columns}
+            data={this.state.listOfTasksByDay}
+          />
         ) : this.state.listOfTasksByDay.length > 0 ? (
           <div className="row">
             {this.state.listOfTasksByDay.map((tasks, i) => (
