@@ -1,22 +1,27 @@
-.container{
+.container {
   margin-top: 40px;
 }
 
-.positionToast{
+.positionToast {
   position: relative;
   bottom: -300px;
-  left:-590px;
+  left: -590px;
 }
 
-.card-action button{
+.card-action button {
   margin: 10px;
 }
 
-.completedText{
+.completedText {
   text-decoration: line-through;
 }
 
-.positionEveryday{
+.positionEveryday {
   position: relative;
-  top:7px;
+  top: 7px;
+}
+.alignCheckBoxTable {
+  justify-content: center;
+  margin-left: 40px;
+  cursor: pointer;
 }

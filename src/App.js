@@ -3,6 +3,9 @@ import React from 'react';
 import './App.css';
 import M from 'materialize-css';
 import Table from 'rc-table';
+import { TODO_LIST } from './constants/todolistsample';
+import Dialog from 'rc-dialog';
+import 'rc-dialog/assets/index.css';
 import moment from 'moment';
 class App extends React.Component {
   constructor(props) {
@@ -10,20 +13,42 @@ class App extends React.Component {
     this.state = {
       columns: [
         {
+          title: 'Complete Task',
+          dataIndex: '',
+          key: 'completeTask',
+          render: (text, record, index) => (
+            <div
+              className="alignCheckBoxTable"
+              onClick={e => this.completeTask(e, record, index)}>
+              <i className="material-icons">
+                {record.completed ? `check_box` : `check_box_outline_blank`}
+              </i>
+            </div>
+          )
+        },
+
+        {
           title: 'Task',
           dataIndex: 'task',
-          key: 'task'
+          key: 'task_id'
         },
         {
           title: 'Done By / Everyday',
           dataIndex: 'by',
-          key: 'by'
+          key: 'by_id'
         },
         {
           title: 'Edit',
           dataIndex: '',
           key: 'edit',
-          render: () => <button className="btn">Edit</button>
+          render: record => (
+            <button
+              disabled={record.completed}
+              className="btn"
+              onClick={e => this.handleEditTableButton(e, record)}>
+              Edit
+            </button>
+          )
         },
         {
           title: 'Delete',
@@ -33,6 +58,7 @@ class App extends React.Component {
         }
       ],
       listOfTasksByDay: [],
+      isEditable: false,
       tempText: '',
       completed: false,
       by: '',
@@ -54,6 +80,16 @@ class App extends React.Component {
     this.deleteCard = this.deleteCard.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
     this.enableTableViewHandler = this.enableTableViewHandler.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    this.handleEditTableButton = this.handleEditTableButton.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ listOfTasksByDay: TODO_LIST });
+  }
+  handleEditTableButton(e, record) {
+    let { task, by, key } = record;
+    this.setState({ isEditable: true });
   }
   handleText(e) {
     e.preventDefault();
@@ -71,7 +107,7 @@ class App extends React.Component {
     if (this.state.doneEveryday) {
       date = 'Everyday';
     } else {
-      date = moment(this.state.by).format('ddd, MMM Do YYYY');
+      date = moment(this.state.by).format('ddd, MMM Do YY');
     }
     if (
       this.state.tempText === '' ||
@@ -85,7 +121,11 @@ class App extends React.Component {
         classes: 'rounded red positionToast'
       });
     } else {
-      listOfTasksByDay.push({ task: this.state.tempText, by: date });
+      listOfTasksByDay.push({
+        task: this.state.tempText,
+        by: date,
+        key: this.randomString()
+      });
       this.setState(
         {
           listOfTasksByDay,
@@ -142,11 +182,24 @@ class App extends React.Component {
   enableTableViewHandler() {
     this.setState({ enableTableView: !this.state.enableTableView });
   }
+  closeDialog() {
+    this.setState({ isEditable: false });
+  }
+  randomString = () => {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+    var string_length = 8;
+    var randomstring = '';
+    for (var i = 0; i < string_length; i++) {
+      var rnum = Math.floor(Math.random() * chars.length);
+      randomstring += chars.substring(rnum, rnum + 1);
+    }
+    return randomstring;
+  };
   render() {
     return (
       <React.Fragment>
         <div className="row center-align card-panel">
-          <div className="input-field col s4 m4 l3">
+          <div className="input-field col s3 m3">
             <input
               id="todo_task"
               type="text"
@@ -155,7 +208,7 @@ class App extends React.Component {
               placeholder="Task To Do"
             />
           </div>
-          <div className="input-field col s4 m4 l4">
+          <div className="input-field col s3 m3">
             <input
               id="by_day"
               type="date"
@@ -164,9 +217,9 @@ class App extends React.Component {
               disabled={this.state.doneEveryday}
               onChange={e => this.handleDay(e)}
             />
-            <label htmlFor="by_day">By "7 May 19"</label>
+            <label htmlFor="by_day">By "Sat, Jun 15th 19"</label>
           </div>
-          <div className="col s2 m2 l3 positionEveryday">
+          <div className="col s3 m3 positionEveryday">
             <p>
               <label>
                 <input
@@ -182,11 +235,11 @@ class App extends React.Component {
               </label>
             </p>
           </div>
-          <div className="input-field col s2 m2 l2">
+          <div className="input-field col s3 m3">
             <button
               className="btn btn-large red"
               onClick={e => this.addToList(e)}>
-              Add Task / Todo
+              Add Task
             </button>
           </div>
         </div>
@@ -205,10 +258,7 @@ class App extends React.Component {
           </div>
         </div>
         {this.state.enableTableView ? (
-          <Table
-            columns={this.state.columns}
-            data={this.state.listOfTasksByDay}
-          />
+          <Table columns={this.state.columns} data={TODO_LIST} />
         ) : this.state.listOfTasksByDay.length > 0 ? (
           <div className="row">
             {this.state.listOfTasksByDay.map((tasks, i) => (
@@ -302,6 +352,20 @@ class App extends React.Component {
             <h4>Add a Task To Display Here</h4>
           </div>
         )}
+        <Dialog
+          title="Edit The Task"
+          visible={this.state.isEditable}
+          onClose={this.closeDialog}>
+          <div class="input-field">
+            <input
+              id="editTask"
+              type="text"
+              onChange={this.handleTableEdit}
+              placeholder="Edit the task"
+            />
+          </div>
+          <button class="waves-light btn-large">Save</button>
+        </Dialog>
       </React.Fragment>
     );
   }
