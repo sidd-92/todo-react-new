@@ -7,6 +7,7 @@ import { TODO_LIST } from './constants/todolistsample';
 import Dialog from 'rc-dialog';
 import 'rc-dialog/assets/index.css';
 import moment from 'moment';
+import axios from 'axios';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -86,6 +87,14 @@ class App extends React.Component {
 
   componentDidMount() {
     this.setState({ listOfTasksByDay: TODO_LIST });
+    this.getTasksAPI();
+  }
+
+  getTasksAPI() {
+    axios.get(`http://localhost:9000/tasks`)
+    .then(res => {
+      console.log("RESULT FROM API",res);
+    })
   }
   handleEditTableButton(e, record) {
     let { task, by, key } = record;
