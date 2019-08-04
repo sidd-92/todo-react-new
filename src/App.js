@@ -1,8 +1,14 @@
 import React from "react";
-
+import ContainedButtons from "./Components/ContainedButtons/ContainedButtons";
+import SimpleAppBar from "./Components/SimpleAppBar/SimpleAppBar";
 class App extends React.Component {
   render() {
-    return <h1>Sorry Website is Updating</h1>;
+    return (
+      <React.Fragment>
+        <SimpleAppBar />
+        <ContainedButtons />
+      </React.Fragment>
+    );
   }
 }
 
