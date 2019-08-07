@@ -35,16 +35,23 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(2),
+    width: "190px",
+    height: "50px",
     [theme.breakpoints.down("md")]: {
       position: "fixed",
+      width: "60px",
+      height: "60px",
       bottom: theme.spacing(1),
-      right: theme.spacing(1)
+      right: theme.spacing(1),
+      zIndex: 2
     }
   }
 }));
 
 let App = () => {
   const classes = useStyles();
+  const matches = useMediaQuery("(max-width:1024px)");
+  console.log(matches);
   const [selectedDate, handleDateChange] = useState(new Date());
   return (
     <React.Fragment>
@@ -54,18 +61,18 @@ let App = () => {
           <Grid item xs={12}>
             <Paper className={classes.paper}>
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} lg={3}>
                   <TextField
                     autoComplete={false}
                     id="outlined-name"
                     label="Name"
-                    className={classes.textField}
+                    className={classes.NametextField}
                     margin="normal"
                     variant="filled"
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} lg={3}>
                   <TextField
                     autoComplete={false}
                     id="outlined-name"
@@ -78,7 +85,7 @@ let App = () => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3} lg={3}>
+                <Grid item xs={12} sm={6} lg={2}>
                   <FormControl variant="filled" className={classes.formControl}>
                     <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
                     <Select
@@ -93,7 +100,7 @@ let App = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3} lg={2}>
+                <Grid item xs={12} sm={6} lg={2}>
                   <MuiPickersUtilsProvider utils={MomentUtils}>
                     <DatePicker
                       fullWidth
@@ -107,14 +114,15 @@ let App = () => {
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item>
+                <Grid item lg={2}>
                   <Fab
                     size="large"
+                    variant={!matches ? "extended" : "round"}
                     color="secondary"
                     aria-label="add"
                     className={classes.button}
                   >
-                    <AddIcon />
+                    <AddIcon /> {!matches ? "Add Task" : ""}
                   </Fab>
                 </Grid>
               </Grid>
