@@ -9,6 +9,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
+import Badge from "@material-ui/core/Badge";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
@@ -110,7 +111,17 @@ export default function SimpleAppBar() {
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {index % 2 === 0 ? (
+                  <InboxIcon />
+                ) : (
+                  <Badge
+                    className={classes.margin}
+                    badgeContent={4}
+                    color="primary"
+                  >
+                    <MailIcon />
+                  </Badge>
+                )}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>

@@ -6,18 +6,23 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import Input from "@material-ui/core/Input";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
 import FilledInput from "@material-ui/core/FilledInput";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Fab from "@material-ui/core/Fab";
+import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Select from "@material-ui/core/Select";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,12 +50,30 @@ const useStyles = makeStyles(theme => ({
       right: theme.spacing(1),
       zIndex: 2
     }
+  },
+  Work: {
+    color: "#3f51b5"
+  },
+  Personal: {
+    color: "#ff5722"
+  },
+  Shopping: {
+    color: "#00d084"
   }
 }));
 
 let App = () => {
   const classes = useStyles();
   const matches = useMediaQuery("(max-width:1024px)");
+  const [open, setOpen] = React.useState(false);
+
+  function handleClickOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
   console.log(matches);
   const [selectedDate, handleDateChange] = useState(new Date());
   return (
@@ -96,12 +119,52 @@ let App = () => {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Work</MenuItem>
-                      <MenuItem value={20}>Personal</MenuItem>
-                      <MenuItem value={30}>Shopping</MenuItem>
+                      <MenuItem className={classes.Work} value={10}>
+                        Work
+                      </MenuItem>
+                      <MenuItem className={classes.Personal} value={20}>
+                        Personal
+                      </MenuItem>
+                      <MenuItem className={classes.Shopping} value={30}>
+                        Shopping
+                      </MenuItem>
                     </Select>
+                    <FormHelperText>
+                      <Link onClick={handleClickOpen} className={classes.link}>
+                        Create a New Label
+                      </Link>
+                    </FormHelperText>
                   </FormControl>
                 </Grid>
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="form-dialog-title"
+                >
+                  <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      To subscribe to this website, please enter your email
+                      address here. We will send updates occasionally.
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="Email Address"
+                      type="email"
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                      Subscribe
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                 <Grid item xs={12} sm={6} lg={2}>
                   <MuiPickersUtilsProvider utils={MomentUtils}>
                     <DatePicker
