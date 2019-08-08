@@ -65,7 +65,7 @@ let App = () => {
                   <TextField
                     autoComplete={false}
                     id="outlined-name"
-                    label="Name"
+                    label="Task Name"
                     className={classes.NametextField}
                     margin="normal"
                     variant="filled"
@@ -76,7 +76,7 @@ let App = () => {
                   <TextField
                     autoComplete={false}
                     id="outlined-name"
-                    label="Name"
+                    label="Task Description"
                     multiline
                     rowsMax="4"
                     className={classes.textField}
@@ -87,16 +87,18 @@ let App = () => {
                 </Grid>
                 <Grid item xs={12} sm={6} lg={2}>
                   <FormControl variant="filled" className={classes.formControl}>
-                    <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
+                    <InputLabel htmlFor="filled-age-simple">Label</InputLabel>
                     <Select
-                      input={<FilledInput name="age" id="filled-age-simple" />}
+                      input={
+                        <FilledInput name="label" id="filled-age-simple" />
+                      }
                     >
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value={10}>Work</MenuItem>
+                      <MenuItem value={20}>Personal</MenuItem>
+                      <MenuItem value={30}>Shopping</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

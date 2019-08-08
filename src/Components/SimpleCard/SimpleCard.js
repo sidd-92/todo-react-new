@@ -5,6 +5,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import DoneIcon from "@material-ui/icons/Done";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles({
   card: {
@@ -20,13 +22,18 @@ const useStyles = makeStyles({
   },
   pos: {
     marginBottom: 12
+  },
+  button: {
+    flexGrow: 1
+  },
+  icon: {
+    color: "green"
   }
 });
 
-export default function SimpleCard() {
+export default function SimpleCard(props) {
+  let { dueDate, taskName, taskDescription, label } = props;
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
-
   return (
     <Card className={classes.card}>
       <CardContent>
@@ -35,26 +42,33 @@ export default function SimpleCard() {
           color="textSecondary"
           gutterBottom
         >
-          Word of the Day
+          Due Date
         </Typography>
         <Typography variant="h5" component="h2">
-          be
-          {bull}
-          nev
-          {bull}o{bull}
-          lent
+          Todo Task
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          adjective
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+          accumsan gravida odio id suscipit. Donec dignissim justo hendrerit,
+          consequat nulla ac, pretium dui. Donec mattis augue quis diam ultrices
+          tempor. Vivamus vitae eros vel sapien venenatis elementum. Orci varius
+          natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+          mus.
         </Typography>
         <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
+          Label : Work, Personal, Shopping
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <div className={classes.button}>
+          <Button color="primary">Edit</Button>
+          <Button color="secondary">Delete</Button>
+        </div>
+        <Tooltip title="Done With Task">
+          <Button size="small">
+            <DoneIcon className={classes.icon} />
+          </Button>
+        </Tooltip>
       </CardActions>
     </Card>
   );
