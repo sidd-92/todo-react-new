@@ -46,13 +46,19 @@ const useStyles = makeStyles(theme => ({
     }
   },
   Work: {
-    color: "#3f51b5"
+    color: "#3f51b5",
+    textAlign: "initial"
   },
   Personal: {
-    color: "#ff5722"
+    color: "#ff5722",
+    textAlign: "initial"
   },
   Shopping: {
-    color: "#00d084"
+    color: "#00d084",
+    textAlign: "initial"
+  },
+  filledIP: {
+    textAlign: "initial"
   }
 }));
 
@@ -61,15 +67,48 @@ const FormSection = () => {
   const matches = useMediaQuery("(max-width:1024px)");
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState("");
-
+  const [desc, setDesc] = React.useState("");
+  const [newLabel, handleCreateNewLabel] = React.useState("");
+  let listOfLabels = ["None", "Work", "Personal", "Shopping"];
+  const [listLabels, addNewLabel] = React.useState(listOfLabels);
+  const [labelName, setLabel] = React.useState({
+    label: "None"
+  });
+  const [selectedDate, handleDateChange] = useState(new Date());
   function handleClickOpen() {
     setOpen(true);
+    handleCreateNewLabel("");
   }
-
+  function addTask() {
+    let task = {
+      taskName: name,
+      taskDescription: desc,
+      taskLabeledAs: labelName,
+      taskDueDate: selectedDate
+    };
+    console.log(task);
+  }
+  function handleChange(event) {
+    setLabel(oldValues => ({
+      ...oldValues,
+      [event.target.name]: event.target.value
+    }));
+  }
   function handleClose() {
     setOpen(false);
   }
-  const [selectedDate, handleDateChange] = useState(new Date());
+  function resetLabels() {
+    handleCreateNewLabel("");
+    handleClose();
+  }
+  function addANewLabel() {
+    if (newLabel.length > 0) {
+      addNewLabel(oldLabels => [...oldLabels, newLabel]);
+      //listOfLabels.push(newLabel);
+      handleClose();
+    }
+  }
+
   return (
     <Paper className={classes.paper}>
       <Grid container spacing={3}>
@@ -90,6 +129,8 @@ const FormSection = () => {
             id="outlined-name"
             label="Task Description"
             multiline
+            onChange={e => setDesc(e.target.value)}
+            value={desc}
             rowsMax="4"
             className={classes.textField}
             margin="normal"
@@ -100,19 +141,30 @@ const FormSection = () => {
         <Grid item xs={12} sm={6} lg={2}>
           <FormControl variant="filled" className={classes.formControl}>
             <InputLabel htmlFor="filled-age-simple">Label</InputLabel>
-            <Select input={<FilledInput name="label" id="filled-age-simple" />}>
-              <MenuItem value={0}>
-                <em>None</em>
-              </MenuItem>
-              <MenuItem className={classes.Work} value={10}>
-                Work
-              </MenuItem>
-              <MenuItem className={classes.Personal} value={20}>
-                Personal
-              </MenuItem>
-              <MenuItem className={classes.Shopping} value={30}>
-                Shopping
-              </MenuItem>
+            <Select
+              value={labelName.label}
+              onChange={handleChange}
+              input={
+                <FilledInput
+                  className={
+                    labelName.label === "Work"
+                      ? classes.Work
+                      : labelName.label === "Personal"
+                      ? classes.Personal
+                      : labelName.label === "Shopping"
+                      ? classes.Shopping
+                      : classes.filledIP
+                  }
+                  name="label"
+                  id="filled-age-simple"
+                />
+              }
+            >
+              {listLabels.map(item => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
             </Select>
             <FormHelperText>
               <Link onClick={handleClickOpen} className={classes.link}>
@@ -126,27 +178,28 @@ const FormSection = () => {
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+          <DialogTitle id="form-dialog-title">Create a New Label</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To subscribe to this website, please enter your email address
-              here. We will send updates occasionally.
+              To Create a Label, Just type below:
             </DialogContentText>
             <TextField
               autoFocus
               margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
+              id="createLabel"
+              value={newLabel}
+              onChange={e => handleCreateNewLabel(e.target.value)}
+              label="Create Label"
+              type="text"
               fullWidth
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={resetLabels} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary">
-              Subscribe
+            <Button onClick={addANewLabel} color="primary">
+              Create
             </Button>
           </DialogActions>
         </Dialog>
@@ -166,6 +219,7 @@ const FormSection = () => {
         </Grid>
         <Grid item lg={2}>
           <Fab
+            onClick={addTask}
             size="large"
             variant={!matches ? "extended" : "round"}
             color="secondary"
