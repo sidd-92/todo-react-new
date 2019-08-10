@@ -21,6 +21,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import Link from "@material-ui/core/Link";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -59,6 +60,12 @@ const useStyles = makeStyles(theme => ({
   },
   filledIP: {
     textAlign: "initial"
+  },
+  snackbar: {
+    [theme.breakpoints.down("xs")]: {
+      width: "70%",
+      bottom: 30
+    }
   }
 }));
 
@@ -74,6 +81,7 @@ const FormSection = () => {
   const [labelName, setLabel] = React.useState({
     label: "None"
   });
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
   function handleClickOpen() {
     setOpen(true);
@@ -87,6 +95,7 @@ const FormSection = () => {
       taskDueDate: selectedDate
     };
     console.log(task);
+    setOpenSnackBar(true);
   }
   function handleChange(event) {
     setLabel(oldValues => ({
@@ -110,127 +119,140 @@ const FormSection = () => {
   }
 
   return (
-    <Paper className={classes.paper}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} lg={3}>
-          <TextField
-            id="outlined-name"
-            onChange={e => setName(e.target.value)}
-            value={name}
-            label="Task Name"
-            className={classes.NametextField}
-            margin="normal"
-            variant="filled"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          <TextField
-            id="outlined-name"
-            label="Task Description"
-            multiline
-            onChange={e => setDesc(e.target.value)}
-            value={desc}
-            rowsMax="4"
-            className={classes.textField}
-            margin="normal"
-            variant="filled"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} lg={2}>
-          <FormControl variant="filled" className={classes.formControl}>
-            <InputLabel htmlFor="filled-age-simple">Label</InputLabel>
-            <Select
-              value={labelName.label}
-              onChange={handleChange}
-              input={
-                <FilledInput
-                  className={
-                    labelName.label === "Work"
-                      ? classes.Work
-                      : labelName.label === "Personal"
-                      ? classes.Personal
-                      : labelName.label === "Shopping"
-                      ? classes.Shopping
-                      : classes.filledIP
-                  }
-                  name="label"
-                  id="filled-age-simple"
-                />
-              }
-            >
-              {listLabels.map(item => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>
-              <Link onClick={handleClickOpen} className={classes.link}>
-                Create a New Label
-              </Link>
-            </FormHelperText>
-          </FormControl>
-        </Grid>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Create a New Label</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              To Create a Label, Just type below:
-            </DialogContentText>
+    <React.Fragment>
+      <Snackbar
+        open={openSnackBar}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        onClose={() => setOpenSnackBar(false)}
+        autoHideDuration={1000}
+        message={<span id="message-id">Added New Task</span>}
+        className={classes.snackbar}
+      />
+      <Paper className={classes.paper}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} lg={3}>
             <TextField
-              autoFocus
-              margin="dense"
-              id="createLabel"
-              value={newLabel}
-              onChange={e => handleCreateNewLabel(e.target.value)}
-              label="Create Label"
-              type="text"
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={resetLabels} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={addANewLabel} color="primary">
-              Create
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Grid item xs={12} sm={6} lg={2}>
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DatePicker
-              fullWidth
+              id="outlined-name"
+              onChange={e => setName(e.target.value)}
+              value={name}
+              label="Task Name"
+              className={classes.NametextField}
               margin="normal"
-              disablePast={true}
-              inputVariant="filled"
-              value={selectedDate}
-              onChange={date => handleDateChange(date)}
-              id="mui-pickers-date"
-              label="Date picker"
+              variant="filled"
+              fullWidth
             />
-          </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid item lg={2}>
-          <Fab
-            onClick={addTask}
-            size="large"
-            variant={!matches ? "extended" : "round"}
-            color="secondary"
-            aria-label="add"
-            className={classes.button}
+          </Grid>
+          <Grid item xs={12} sm={6} lg={3}>
+            <TextField
+              id="outlined-name"
+              label="Task Description"
+              multiline
+              onChange={e => setDesc(e.target.value)}
+              value={desc}
+              rowsMax="4"
+              className={classes.textField}
+              margin="normal"
+              variant="filled"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} lg={2}>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel htmlFor="filled-age-simple">Label</InputLabel>
+              <Select
+                value={labelName.label}
+                onChange={handleChange}
+                input={
+                  <FilledInput
+                    className={
+                      labelName.label === "Work"
+                        ? classes.Work
+                        : labelName.label === "Personal"
+                        ? classes.Personal
+                        : labelName.label === "Shopping"
+                        ? classes.Shopping
+                        : classes.filledIP
+                    }
+                    name="label"
+                    id="filled-age-simple"
+                  />
+                }
+              >
+                {listLabels.map(item => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                <Link onClick={handleClickOpen} className={classes.link}>
+                  Create a New Label
+                </Link>
+              </FormHelperText>
+            </FormControl>
+          </Grid>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
           >
-            <AddIcon /> {!matches ? "Add Task" : ""}
-          </Fab>
+            <DialogTitle id="form-dialog-title">Create a New Label</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                To Create a Label, Just type below:
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="createLabel"
+                value={newLabel}
+                onChange={e => handleCreateNewLabel(e.target.value)}
+                label="Create Label"
+                type="text"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={resetLabels} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={addANewLabel} color="primary">
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Grid item xs={12} sm={6} lg={2}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DatePicker
+                fullWidth
+                margin="normal"
+                disablePast={true}
+                inputVariant="filled"
+                value={selectedDate}
+                onChange={date => handleDateChange(date)}
+                id="mui-pickers-date"
+                label="Date picker"
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item lg={2}>
+            <Fab
+              onClick={addTask}
+              size="large"
+              variant={!matches ? "extended" : "round"}
+              color="secondary"
+              aria-label="add"
+              className={classes.button}
+            >
+              <AddIcon /> {!matches ? "Add Task" : ""}
+            </Fab>
+          </Grid>
         </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </React.Fragment>
   );
 };
 
