@@ -89,7 +89,7 @@ export default function SimpleAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            My Todo App
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -108,24 +108,26 @@ export default function SimpleAppBar() {
       </AppBar>
       <Drawer open={drawerIsOpen} onClose={() => openDrawer(false)}>
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? (
-                  <InboxIcon />
-                ) : (
-                  <Badge
-                    className={classes.margin}
-                    badgeContent={4}
-                    color="primary"
-                  >
-                    <MailIcon />
-                  </Badge>
-                )}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          {["New Tasks", "Starred", "Completed", "Deleted"].map(
+            (text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? (
+                    <InboxIcon />
+                  ) : (
+                    <Badge
+                      className={classes.margin}
+                      badgeContent={4}
+                      color="primary"
+                    >
+                      <MailIcon />
+                    </Badge>
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            )
+          )}
         </List>
       </Drawer>
     </div>

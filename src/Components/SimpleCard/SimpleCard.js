@@ -7,8 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DoneIcon from "@material-ui/icons/Done";
 import Tooltip from "@material-ui/core/Tooltip";
-
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   card: {
     minWidth: 275
   },
@@ -21,10 +20,17 @@ const useStyles = makeStyles({
     fontSize: 14
   },
   pos: {
-    marginBottom: 12
+    marginBottom: 12,
+    wordBreak: "break-word"
+  },
+  taskName: {
+    wordBreak: "break-word"
   },
   button: {
-    flexGrow: 1
+    flexGrow: 1,
+    [theme.breakpoints.down("sm")]: {
+      flexGrow: 0
+    }
   },
   icon: {
     color: "green"
@@ -38,7 +44,7 @@ const useStyles = makeStyles({
   Shopping: {
     color: "#00d084"
   }
-});
+}));
 
 export default function SimpleCard(props) {
   let { dueDate, taskName, taskDescription, label } = props;
@@ -53,7 +59,7 @@ export default function SimpleCard(props) {
         >
           {dueDate}
         </Typography>
-        <Typography variant="h5" component="h2">
+        <Typography className={classes.taskName} variant="h5" component="h2">
           {taskName}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
