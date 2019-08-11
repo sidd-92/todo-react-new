@@ -21,8 +21,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import Link from "@material-ui/core/Link";
-import Snackbar from "@material-ui/core/Snackbar";
-
+const moment = require("moment");
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
@@ -69,7 +68,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FormSection = () => {
+const FormSection = ({ onCreateTask }) => {
   const classes = useStyles();
   const matches = useMediaQuery("(max-width:1024px)");
   const [open, setOpen] = React.useState(false);
@@ -117,20 +116,15 @@ const FormSection = () => {
       handleClose();
     }
   }
+  function resetAllFields() {
+    setName("");
+    setDesc("");
+    setLabel({ label: "None" });
+    handleDateChange(new Date());
+  }
 
   return (
     <React.Fragment>
-      <Snackbar
-        open={openSnackBar}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        onClose={() => setOpenSnackBar(false)}
-        autoHideDuration={1000}
-        message={<span id="message-id">Added New Task</span>}
-        className={classes.snackbar}
-      />
       <Paper className={classes.paper}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} lg={3}>
@@ -240,7 +234,15 @@ const FormSection = () => {
           </Grid>
           <Grid item lg={2}>
             <Fab
-              onClick={addTask}
+              onClick={e => {
+                onCreateTask(e, {
+                  taskName: name,
+                  taskDescription: desc,
+                  taskLabeledAs: labelName,
+                  taskDueDate: moment(selectedDate).format("MMM Do")
+                });
+                resetAllFields();
+              }}
               size="large"
               variant={!matches ? "extended" : "round"}
               color="secondary"

@@ -1,0 +1,16 @@
+/* snackbar: {
+    [theme.breakpoints.down("xs")]: {
+      width: "70%",
+      bottom: 30
+    }
+  }*/
+.h4 {
+  text-align: center;
+}
+@media only screen and (max-width: 600px) {
+  .snackbar {
+    width: 70%;
+    position: relative;
+    bottom: 28px !important;
+  }
+}

@@ -28,6 +28,15 @@ const useStyles = makeStyles({
   },
   icon: {
     color: "green"
+  },
+  Work: {
+    color: "#3f51b5"
+  },
+  Personal: {
+    color: "#ff5722"
+  },
+  Shopping: {
+    color: "#00d084"
   }
 });
 
@@ -42,21 +51,28 @@ export default function SimpleCard(props) {
           color="textSecondary"
           gutterBottom
         >
-          Due Date
+          {dueDate}
         </Typography>
         <Typography variant="h5" component="h2">
-          Todo Task
+          {taskName}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-          accumsan gravida odio id suscipit. Donec dignissim justo hendrerit,
-          consequat nulla ac, pretium dui. Donec mattis augue quis diam ultrices
-          tempor. Vivamus vitae eros vel sapien venenatis elementum. Orci varius
-          natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-          mus.
+          {taskDescription}
         </Typography>
-        <Typography variant="body2" component="p">
-          Label : Work, Personal, Shopping
+        <Typography
+          variant="body2"
+          component="p"
+          className={
+            label === "Work"
+              ? classes.Work
+              : label === "Personal"
+              ? classes.Personal
+              : label === "Shopping"
+              ? classes.Shopping
+              : null
+          }
+        >
+          {label === "None" ? "" : label}
         </Typography>
       </CardContent>
       <CardActions>
